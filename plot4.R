@@ -1,0 +1,17 @@
+library(data.table)
+dat <- fread("household_power_consumption.txt", skip="1/2/2007", nrows=2880,
+             na.strings="?",header=FALSE)
+header <- as.character(fread("household_power_consumption.txt", header=FALSE,
+               nrows=1))
+dat <- setnames(dat, header)
+DT <- strptime(paste(dat$Date, dat$Time, sep=" "), "%d/%m/%Y %H:%M:%S", tz="GMT")
+png(file="plot4.png")
+par(mfrow = c(2, 2)) 
+plot(DT, dat$Global_active_power, type="l", xlab="", ylab="Global Active Power", cex=0.2) 
+plot(DT, dat$Voltage, type="l", xlab="datetime", ylab="Voltage") 
+plot(DT, dat$Sub_metering_1, type="l", ylab="Energy sub metering", xlab="") 
+lines(DT, dat$Sub_metering_2, type="l", col="red") 
+lines(DT, dat$Sub_metering_3, type="l", col="blue") 
+legend("topright", c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty=, lwd=2.5, col=c("black", "red", "blue")) 
+plot(DT, dat$Global_reactive_power, type="l", xlab="datetime", ylab="Global_reactive_power") 
+dev.off()
